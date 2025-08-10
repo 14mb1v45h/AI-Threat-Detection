@@ -254,7 +254,11 @@ def stream_events():
         df["rules_reasons"] = r_reasons
 
         # Blend risk (simple weighted fusion)
-        df["risk_blend"] = 0.7 * (df["risk_ml"] - df["risk_ml"].min()) / (df["risk_ml"].ptp() + 1e-6) + 0.3 * df["risk_rules"]
+        df["risk_blend"] = (
+        0.7 * (df["risk_ml"] - df["risk_ml"].min()) /
+        ((df["risk_ml"].max() - df["risk_ml"].min()) + 1e-6)
+        + 0.3 * df["risk_rules"]
+    )
 
         # Track metrics
         st.session_state.events_processed += len(df)
